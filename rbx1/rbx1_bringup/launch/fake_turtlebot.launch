@@ -1,18 +1,20 @@
 <launch>
-  <param name="/use_sim_time" value="false" />
+  <param name="/use_sim_time" value="false" /> //Atributo de nombre de parámetro
 
-  <!-- Load the URDF/Xacro model of our robot -->
+  <!-- Carga el modelo URDF / Xacro de nuestro robot -->
   <arg name="urdf_file" default="$(find xacro)/xacro.py '$(find rbx1_description)/urdf/turtlebot.urdf.xacro'" />
    
   <param name="robot_description" command="$(arg urdf_file)" />
-    
+  
+  <!-- Se crea el nodo "arbotix", del paquete arbotix_python.Asimismo se coloca el ejecutable y la salida que tendrá --> 
   <node name="arbotix" pkg="arbotix_python" type="arbotix_driver" output="screen" clear_params="true">
       <rosparam file="$(find rbx1_bringup)/config/fake_turtlebot_arbotix.yaml" command="load" />
       <param name="sim" value="true"/>
-      
+      <!-- A CONTINUACIÓN ESTÁ LA LÍNEA DE CÓDIGO AGREGADA, el cual usamos para cambiar un tema en este nodo. -->
       <remap from="/cmd_vel" to="/turtle1/cmd_vel"/>
   </node>
   
+   <!-- Se crea el nodo publicador y se le asigna una frecuencia de publicación. -->
   <node name="robot_state_publisher" pkg="robot_state_publisher" type="state_publisher">
       <param name="publish_frequency" type="double" value="20.0" />
   </node>
